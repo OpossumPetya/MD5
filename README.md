@@ -18,7 +18,7 @@ Complite to .exe with PAR::PAcker:
 Help
 ====
 
-Displays MD5 hashes of files in a directory.
+    Displays MD5 hashes of files in a directory.
 
     MD5.PL [drive:][path] [/b]
 
