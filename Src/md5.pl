@@ -13,11 +13,11 @@ my $dir = shift;            # shifts from @ARGV
 my $arg = $ARGV[0] || "";
 
 
-# if no args specified at all -- process current directory
+# if no arguments specified, then process current directory
 $dir = DEFAULT_DIR unless defined $dir;
 
-# user spcifically asked for help...
-if ($dir eq '/?' || $dir eq '-h' || $dir eq '--help')
+# user specifically asked for help...
+if( $dir eq '/?' || $dir eq '-h' || $dir eq '--help' )
 {
     my( undef, undef, $script_file ) = File::Spec->splitpath( $0 );
     $script_file = uc $script_file;
@@ -73,4 +73,4 @@ opendir( my $DH, $dir ) or die "$!";
         }
     }
 
-close $DH;
+closedir $DH;
