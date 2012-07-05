@@ -27,3 +27,13 @@ Help
                 The current directory is processed by default.
 
       /b        Bare format (prints only MD5 hash).
+
+To do
+=====
+
+- Add processing of a single file, instead of the whole directory
+- Recurively process subdirectories (`/s`)
+- Flexible/configurable output (templates for MD5, file name, file size, directory name, directory path)
+- Quiet mode (`/q`) - do not print failed attempts (for example when no rights to open a file)
+- Publish complied .exe files
+- Add `/h` to help output
