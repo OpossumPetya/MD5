@@ -17,7 +17,7 @@ my $arg = $ARGV[0] || "";
 $dir = DEFAULT_DIR unless defined $dir;
 
 # user specifically asked for help...
-if( $dir eq '/?' || $dir eq '-h' || $dir eq '--help' )
+if( $dir eq '/?' || $dir eq '/h' || $dir eq '-h' || $dir eq '--help' )
 {
     my( undef, undef, $script_file ) = File::Spec->splitpath( $0 );
     $script_file = uc $script_file;
@@ -29,11 +29,12 @@ Displays MD5 hashes of files in a directory.
 $script_file [drive:][path] [/b]
 
   [drive:][path]
-            Specifies drive and/or directory to process.
+            Specifies drive and/or directory or file to process.
             The current directory is processed by default.
 
   @{[ ARG_BARE ]}\t    Bare format (prints only MD5 hash).
-    
+  /?\t    Print this help.
+
 HOW_TO_USE
     exit;
 }
@@ -49,28 +50,53 @@ if( lc $dir eq ARG_BARE ) {
 # for example: "\windows\system32\..\fonts\" => "c:\windows\fonts"
 $dir = File::Spec->rel2abs( File::Spec->canonpath( $dir ) );
 
-opendir( my $DH, $dir ) or die "$!";
-    
-    my @files = sort grep { -f "$dir\\$_" } readdir $DH;
+if( -f $dir ) {
+# process single file
 
-    for( @files ) {
-        my $file_name = $_;         # only name of the file
-        my $file_path = "$dir\\$_"; # full path to a file
+    my( $vol, $dir, $file ) = File::Spec->splitpath( $dir );
+    chop $dir; # remove trailing slash
+    process_file( $vol.$dir, $file );
+}
+else {
+# process directory
+
+    opendir( my $DH, $dir ) or die "$!";
         
-        if( open( my $FH, $file_path ) ) {
-            binmode( $FH );
-            
-            print Digest::MD5->new->addfile($FH)->hexdigest;
-            if( lc $arg ne ARG_BARE) {
-                print " - $file_name (".( -s $file_path ).")";
-            }
-            print "\n";
-            
-            close $FH;
-        }
-        else {
-            print "$file_name skipped: $!\n";
-        }
-    }
+        my @files = sort grep { -f "$dir\\$_" } readdir $DH;
 
-closedir $DH;
+        for( @files ) {
+            process_file( $dir, $_ );
+        }
+
+    closedir $DH;
+}
+
+exit 0;
+
+# ===========================================================================
+
+sub process_file {
+    my $dir  = shift;
+    my $file = shift;
+    
+    my $ret = 0;
+    my $file_path = "$dir\\$file"; # full path to a file
+    
+    if( open( my $FH, $file_path ) ) {
+        binmode( $FH );
+        
+        print Digest::MD5->new->addfile($FH)->hexdigest;
+        if( lc $arg ne ARG_BARE) {
+            print " - $file (".( -s $file_path ).")";
+        }
+        print "\n";
+        
+        close $FH;
+    }
+    else {
+        print "$file skipped: $!\n";
+        $ret = 1;
+    }
+    
+    return $ret;
+}
