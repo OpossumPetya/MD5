@@ -51,23 +51,21 @@ if( lc $dir eq ARG_BARE ) {
 $dir = File::Spec->rel2abs( File::Spec->canonpath( $dir ) );
 
 if( -f $dir ) {
-# process single file
-
+    # process single file
     my( $vol, $dir, $file ) = File::Spec->splitpath( $dir );
     chop $dir; # remove trailing slash
     process_file( $vol.$dir, $file );
 }
 else {
-# process directory
-
+    # process directory
     opendir( my $DH, $dir ) or die "$!";
-        
-        my @files = sort grep { -f "$dir\\$_" } readdir $DH;
-
-        for( @files ) {
-            process_file( $dir, $_ );
-        }
-
+    my @files = 
+        sort { "\L$a" cmp "\L$b" }
+        grep { -f "$dir\\$_" } 
+        readdir $DH;
+    for my $file (@files) {
+        process_file( $dir, $file );
+    }
     closedir $DH;
 }
 
