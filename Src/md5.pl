@@ -1,6 +1,9 @@
+
+use v5.10; # so filetest ops can stack / https://perldoc.perl.org/functions/-X.html
 use strict;
 use warnings;
 
+use File::DosGlob 'glob';
 use File::Spec;
 use Digest::MD5 qw(md5 md5_hex);
 
@@ -12,6 +15,7 @@ use constant {
 my $dir = shift;            # shifts from @ARGV
 my $arg = $ARGV[0] || "";
 
+my $CURRENT_DIR = '';
 
 # if no arguments specified, then process current directory
 $dir = DEFAULT_DIR unless defined $dir;
@@ -45,20 +49,19 @@ if( lc $dir eq ARG_BARE ) {
     $arg = ARG_BARE;
 }
 
-
 # removes backslash if present and converts relative paths to absolute
 # for example: "\windows\system32\..\fonts\" => "c:\windows\fonts"
 $dir = File::Spec->rel2abs( File::Spec->canonpath( $dir ) );
 
-if( -f $dir ) {
-    # process single file
+if( -e -f $dir ) {
+    # say "process single file";
     my( $vol, $dir, $file ) = File::Spec->splitpath( $dir );
     chop $dir; # remove trailing slash
     process_file( $vol.$dir, $file );
 }
-else {
-    # process directory
-    opendir( my $DH, $dir ) or die "$!";
+elsif( -e $dir ) {
+    # say "process single directory";
+    opendir my $DH, $dir or die "$!";
     my @files = 
         sort { "\L$a" cmp "\L$b" }
         grep { -f "$dir\\$_" } 
@@ -67,6 +70,20 @@ else {
         process_file( $dir, $file );
     }
     closedir $DH;
+}
+else {
+    # say "process path w/ wildcards";
+    my @files = glob $dir;
+    for my $file (
+        sort { "\L$a" cmp "\L$b" }
+        grep { -f "$_" } 
+        @files
+    ){
+        my( $vol, $dir, $file ) = File::Spec->splitpath($file);
+        my $d = $vol.$dir;
+        $CURRENT_DIR = $d, say "\n  $d\n" if $CURRENT_DIR ne $d;
+        process_file( $dir, $file );
+    }
 }
 
 exit 0;
@@ -78,17 +95,15 @@ sub process_file {
     my $file = shift;
     
     my $ret = 0;
-    my $file_path = "$dir\\$file"; # full path to a file
+    my $file_path = "$dir\\$file";
     
     if( open( my $FH, $file_path ) ) {
-        binmode( $FH );
-        
+        binmode $FH;
         print Digest::MD5->new->addfile($FH)->hexdigest;
-        if( lc $arg ne ARG_BARE) {
+        if( lc $arg ne ARG_BARE ) {
             print " - $file (".( -s $file_path ).")";
         }
         print "\n";
-        
         close $FH;
     }
     else {

@@ -5,15 +5,8 @@ Lists MD5 hashes of all files in specified directory.
 
 - Current directory is used by default
 - File name and size are also displayed by default
-- `/b`[are] switch is available to list MD5 hashes only
+- `/b`[are] switch is available to list MD5 hashes only. Files are still processed in Alphabetical order (case ignored).
 
-
-Compile to .EXE
-===============
-
-Complite to .exe with PAR::PAcker:
-
-`pp --info=FileVersion=1.0.0.0 --icon icon_md5.ico -o md5.exe md5.pl`
 
 Help
 ====
@@ -29,14 +22,22 @@ Help
       /b        Bare format (prints only MD5 hash).
       /?        Print this help.
 
+Compile to .EXE
+===============
+
+Complite to .exe with PAR::Packer:
+
+`pp --info=FileVersion=1.0.0.0 --icon icon_md5.ico -o md5.exe md5.pl`
+
 To do
 =====
 
-- Add processing of files using wildchars
-- Recurively process subdirectories (`/s`)
-- Flexible/configurable output (templates for MD5, file name, file size, directory name, directory path)
-- Quiet mode (`/q`) - do not print failed attempts (for example when no rights to open a file)
+- Process arguments using light CPAN module
+- Recursively process subdirectories (`/s`)
+- Flexible/configurable output (templates for MD5: file name, file size, directory name, directory path)
+- Quiet mode (`/q`) - do not print failed attempts (for example, when no rights to open a file error is encountered)
 - Handle "no permission" directories
+- Add tests!
 
 Changes
 =======
