@@ -5,7 +5,7 @@ Print MD5 hashes of files in specified directory (wildcards accepted). Also work
 
 - Current directory is used by default
 - File name and size are also displayed by default
-- `/b`are switch is available to list MD5 hashes only. Files are still processed in Alphabetical order (case ignored).
+- `/b` (bare) switch is available to list MD5 hashes only. Files are still processed in Alphabetical order (case ignored).
 
 
 Usage
@@ -43,5 +43,6 @@ Changes
 
 2021-12-04
 * Tidied up internals.
+
 Previously
 * Added processing of a single file
