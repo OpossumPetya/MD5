@@ -1,15 +1,15 @@
 MD5
 ===
 
-Lists MD5 hashes of all files in specified directory.
+Print MD5 hashes of files in specified directory (wildcards accepted). Also works for a single file.
 
 - Current directory is used by default
 - File name and size are also displayed by default
-- `/b`[are] switch is available to list MD5 hashes only. Files are still processed in Alphabetical order (case ignored).
+- `/b`are switch is available to list MD5 hashes only. Files are still processed in Alphabetical order (case ignored).
 
 
-Help
-====
+Usage
+=====
 
     Displays MD5 hashes of files in a directory.
 
@@ -22,25 +22,26 @@ Help
       /b        Bare format (prints only MD5 hash).
       /?        Print this help.
 
-Compile to .EXE
-===============
+How to pack to .EXE
+===================
 
-Complite to .exe with PAR::Packer:
+Pack to `.exe` file with [PAR::Packer](https://metacpan.org/pod/pp):
 
-`pp --info=FileVersion=1.0.0.0 --icon icon_md5.ico -o md5.exe md5.pl`
+`pp -o md5.exe md5.pl`
 
 To do
 =====
 
-- Process arguments using light CPAN module
 - Recursively process subdirectories (`/s`)
-- Flexible/configurable output (templates for MD5: file name, file size, directory name, directory path)
-- Quiet mode (`/q`) - do not print failed attempts (for example, when no rights to open a file error is encountered)
+- Quiet mode (`/q`) - do not print failed attempts (ex.: no access rights to a file)
+- Flexible/configurable output (templates: MD5 hash, file name, file size, directory name, directory path)
 - Handle "no permission" directories
 - Add tests!
 
 Changes
 =======
 
-v1.0.1.0
+2021-12-04
+* Tidied up internals.
+Previously
 * Added processing of a single file
