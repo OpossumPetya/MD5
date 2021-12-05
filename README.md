@@ -22,6 +22,27 @@ Usage
       /b        Bare format (prints only MD5 hash).
       /?        Print this help.
 
+
+Usage examples
+===============
+
+    C:\path>md5
+    61dfff7c01b77af512143b41d8a3bc51 - md5.exe (8421778)
+    1d7b4f1b079c17cc17c5e2a627000c17 - md5.ico (4286)
+    bf8a9a706ef8896896ad36729a9e41a1 - md5.pl (3258)
+
+    C:\path>md5 /b
+    61dfff7c01b77af512143b41d8a3bc51
+    1d7b4f1b079c17cc17c5e2a627000c17
+    bf8a9a706ef8896896ad36729a9e41a1
+
+    C:\path>md5 \d*.*
+    
+      C:\
+    
+    DumpStack.log skipped: Permission denied
+    DumpStack.log.tmp skipped: Permission denied
+
 How to pack to .EXE
 ===================
 
