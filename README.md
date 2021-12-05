@@ -1,7 +1,7 @@
 MD5
 ===
 
-Print MD5 hashes of files in specified directory (wildcards accepted). Also works for a single file.
+Windows command line tool to print MD5 hashes of files in specified directory. Also works for a single file.
 
 - Current directory is used by default
 - File name and size are also displayed by default
